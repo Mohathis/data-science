@@ -1,0 +1,41 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier,plot_tree
+from sklearn.datasets import load_iris
+from sklearn.metrics import accuracy_score
+
+data=load_iris()
+X=data.data
+y=data.target
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+model=DecisionTreeClassifier(criterion='entropy',random_state=42,max_depth=3)
+model.fit(X_train,y_train)
+y_pred=model.predict(X_test)
+accuracy=accuracy_score(y_pred,y_test)
+print("accuracy score",accuracy)
+
+plt.figure(figsize=(15,10))
+
+plot_tree(model,feature_names=data.feature_names,class_names=data.target_names.tolist(),filled=True,rounded=True)
+
+plt.title('decision tree')
+
+print('enter the values of 30 features')
+
+features=[]
+
+for i in range(4):
+  value=float(input(f'Enter {data.feature_names[i]}:'))
+  features.append(value)
+
+new_data=np.array([features])
+prediction=model.predict(new_data)
+
+print("predicted diagnol:",data.target_names[prediction[0]])
+plt.show()
